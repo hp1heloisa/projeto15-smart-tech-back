@@ -15,7 +15,7 @@ export async function postProduct(req, res) {
     }
 }
 
-export async function getProduct(req, res) {
+export async function getProducts(req, res) {
     try {
         const products = await db.collection("products").find().toArray()
         res.send(products)
@@ -25,7 +25,7 @@ export async function getProduct(req, res) {
 }
 
 export async function getProductById(req, res) {
-    const { id } = req.body;
+    const { id } = req.params
     
     try {
         const product = await db.collection("products").findOne({ _id: new ObjectId(id) })
