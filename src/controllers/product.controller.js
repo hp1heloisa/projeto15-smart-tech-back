@@ -34,3 +34,13 @@ export async function getProductById(req, res) {
         res.status(500).send(error.message);
     }
 }
+
+export async function getProductByCategory(req, res){
+    const { category } = req.params;
+    try {
+        const products = await db.collection("products").find({category: category}).toArray();
+        res.send(products);
+    } catch (err) {
+        res.status(500).send(err.message)
+    }
+}
