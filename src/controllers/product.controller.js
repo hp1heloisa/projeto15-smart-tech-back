@@ -44,3 +44,15 @@ export async function getProductByCategory(req, res){
         res.status(500).send(err.message)
     }
 }
+
+
+export async function postProductMany(req, res) {
+    const {list} = req.body;
+    
+    try {
+        await db.collection('products').insertMany(list);
+        res.sendStatus(201);
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+}
