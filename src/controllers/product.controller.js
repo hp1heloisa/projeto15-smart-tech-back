@@ -51,6 +51,7 @@ export async function postProductMany(req, res) {
     
     try {
         await db.collection('products').insertMany(list);
+        await db.collection('products').find().toArray();
         res.sendStatus(201);
     } catch (error) {
         res.status(500).send(error.message);
