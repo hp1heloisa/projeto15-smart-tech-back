@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { addProduto, getProductByCategory, getProductById, getProducts, postProduct, postProductMany } from "../controllers/product.controller.js";
+import { addCarrinho, getProductByCategory, getProductById, getProducts, postProduct, postProductMany } from "../controllers/product.controller.js";
 import { validateAuth } from "../middlewares/validateAuthorization.js";
 import { validateSchema } from "../middlewares/validateSchema.js";
 import { schemaCarrinho } from "../schemas/productSchemas.js";
@@ -11,6 +11,6 @@ productsRouter.get('/', getProducts);
 productsRouter.get('/produtos/:id', getProductById);
 productsRouter.get('/category/:category', getProductByCategory);
 productsRouter.post('/many', postProductMany);
-productsRouter.put('/addproduto', validateAuth, validateSchema(schemaCarrinho), addProduto)
+productsRouter.put('/addproduto', validateAuth, validateSchema(schemaCarrinho), addCarrinho)
 
 export default productsRouter;

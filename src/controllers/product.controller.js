@@ -58,14 +58,14 @@ export async function postProductMany(req, res) {
     }
 }
 
-export async function addProduto(req, res) {
+export async function addCarrinho(req, res) {
     const {idProduct} = req.body;
     const {idUser} = res.locals.tokenOk;
     try {
         const info = await db.collection('user').findOne({_id: idUser});
         await db.collection('user').updateOne(
             {_id: idUser},
-            {$set: {carrinho: [... info.carrinho, new ObjectId(idProduct)]}}
+            {$set: {carrinho: [... info.carrinho, idProduct]}}
         )
         res.sendStatus(200);
     } catch (error) {
