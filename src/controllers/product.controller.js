@@ -57,3 +57,18 @@ export async function postProductMany(req, res) {
         res.status(500).send(error.message);
     }
 }
+
+export async function addProduto(req, res) {
+    const {idProduct} = req.body;
+    const {idUser} = res.locals.tokenOk;
+    try {
+        const info = await db.collection('user').findOne({_id: idUser});
+        await db.collection('user').updateOne(
+            {_id: idUser},
+            {$set: {carrinho: [... info.carrinho, new ObjectId(idProduct)]}}
+        )
+        res.sendStatus(200);
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+}
