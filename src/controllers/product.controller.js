@@ -38,7 +38,7 @@ export async function getProductById(req, res) {
 export async function getProductByCategory(req, res){
     const { category } = req.params;
     try {
-        const products = await db.collection("products").find({category: category}).toArray();
+        const products = await db.collection("products").find({category: category.replace('-',' ')}).toArray();
         res.send(products);
     } catch (err) {
         res.status(500).send(err.message)
