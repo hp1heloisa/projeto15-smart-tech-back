@@ -84,3 +84,26 @@ export async function searchProduct(req, res) {
         res.status(500).send(error.message);
     }
 }
+
+export async function getCarrinho(req, res){
+    const { tokenOk } = res.locals;
+    try {
+        const user = await db.collection('user').findOne({_id: new ObjectId(tokenOk.idUser)});
+        res.send(user.carrinho);
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+}
+
+export async function limpaCarrinho(req,res){
+    const { tokenOk } = res.locals;
+    try {
+        const user = await db.collection('user').updateOne(
+            {_id: new ObjectId(tokenOk.idUser)},
+            {$set: {carrinho: []}}
+            );
+        res.send(user);
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+}
