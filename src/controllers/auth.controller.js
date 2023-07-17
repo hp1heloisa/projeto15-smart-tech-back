@@ -29,3 +29,17 @@ export async function login(req, res) {
         res.status(500).send(error.message);
     }
 }
+
+export async function logout(req, res){
+    const { tokenOk } = res.locals;
+    try {
+        const deleted = await db.collection('section').deleteOne({token: tokenOk.token});
+        if (deleted.deletedCount > 0){
+            res.sendStatus(200);
+        } else {
+            res.sendStatus(404);
+        }
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+}
