@@ -1,5 +1,6 @@
 import { db } from "../database/database.connection.js";
 import { ObjectId } from "mongodb"
+import dayjs from "dayjs";
 
 export async function postProduct(req, res) {
     const {name, image, value, category, description} = req.body;
@@ -103,6 +104,30 @@ export async function limpaCarrinho(req,res){
             {$set: {carrinho: []}}
             );
         res.send(user);
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+}
+
+export async function sendOrder(req, res){
+    const {value,} = req.body;
+    const { tokenOk } = res.locals;
+    const dataAtual = dayjs();
+
+    try {
+        const user = await db.collection('user').findOne({_id: new ObjectId(tokenOk.idUser)});
+
+        const order = {
+            idUser: user._id,
+            value: value,
+            products: user.carrinho,
+            time: dataAtual.format('DD-MM-YYYY')
+        }
+
+        await db.collection('orders').insertOne(order);
+
+        res.status(201).send(order);
+
     } catch (error) {
         res.status(500).send(error.message);
     }
