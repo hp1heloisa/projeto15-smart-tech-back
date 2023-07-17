@@ -125,3 +125,24 @@ export async function limpaCarrinho(req,res){
         res.status(500).send(error.message);
     }
 }
+
+export async function deleteProdutos(req, res) {
+    const { id } = req.params;
+    const { tokenOk } = res.locals;
+    try {
+        console.log(id);
+        const user = await db.collection('user').findOne({_id: new ObjectId(tokenOk.idUser)});
+        const newCart = user.carrinho.filter(product => {
+            if (product._id != id){
+                return product;
+            }
+        })
+        await db.collection('user').updateOne(
+            {_id: new ObjectId(tokenOk.idUser)},
+            {$set: {carrinho: newCart}}
+            );
+        res.send(newCart);
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+}
