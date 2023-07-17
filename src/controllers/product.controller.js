@@ -72,3 +72,13 @@ export async function addCarrinho(req, res) {
         res.status(500).send(error.message);
     }
 }
+
+export async function searchProduct(req, res) {
+    const {world} = req.body;
+    try {
+        const list = await db.collection('products').find({name: {$regex: world, $options: 'i'}}).toArray();
+        res.send(list);
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+}
