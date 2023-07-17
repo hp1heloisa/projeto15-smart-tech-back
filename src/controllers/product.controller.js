@@ -74,7 +74,7 @@ export async function addCarrinho(req, res) {
 }
 
 export async function searchProduct(req, res) {
-    const {world} = req.body;
+    const {world} = req.query;
     try {
         const list = await db.collection('products').find({name: {$regex: world, $options: 'i'}}).toArray();
         res.send(list);
