@@ -1,6 +1,7 @@
 import { db } from "../database/database.connection.js";
 import { ObjectId } from "mongodb"
 import dayjs from "dayjs";
+import e from "express";
 
 export async function postProduct(req, res) {
     const {name, image, value, category, description} = req.body;
@@ -168,6 +169,39 @@ export async function deleteProdutos(req, res) {
             {$set: {carrinho: newCart}}
             );
         res.send(newCart);
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+}
+
+export async function addDelProd(req, res) {
+    const { id, tipo } = req.params;
+    const { tokenOk } = res.locals;
+    try {
+        const user = await db.collection('user').findOne({_id: new ObjectId(tokenOk.idUser)});
+        if (tipo == 'add'){
+            const infoProduct = await db.collection('products').findOne({_id: new ObjectId(id)});
+            await db.collection('user').updateOne(
+                {_id: new ObjectId(tokenOk.idUser)},
+                {$set: {carrinho: [...user.carrinho, infoProduct]}}
+                );
+            res.sendStatus(200);
+        } else{
+            let remove = true;
+            const newCart = user.carrinho.filter(produto => {
+                if (produto._id == id && remove){
+                    remove = false
+                } else{ 
+                    return produto;
+                }
+            });
+            await db.collection('user').updateOne(
+                {_id: new ObjectId(tokenOk.idUser)},
+                {$set: {carrinho: newCart}}
+                );
+            res.send(newCart);
+        }
+
     } catch (error) {
         res.status(500).send(error.message);
     }
