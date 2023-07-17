@@ -62,10 +62,11 @@ export async function addCarrinho(req, res) {
     const {idProduct} = req.body;
     const {idUser} = res.locals.tokenOk;
     try {
-        const info = await db.collection('user').findOne({_id: idUser});
+        const infoUser = await db.collection('user').findOne({_id: idUser});
+        const infoProduct = await db.collection('products').findOne({_id: new ObjectId(idProduct)});
         await db.collection('user').updateOne(
             {_id: idUser},
-            {$set: {carrinho: [... info.carrinho, idProduct]}}
+            {$set: {carrinho: [... infoUser.carrinho, infoProduct]}}
         )
         res.sendStatus(200);
     } catch (error) {
