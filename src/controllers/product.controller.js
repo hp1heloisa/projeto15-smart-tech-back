@@ -128,7 +128,7 @@ export async function limpaCarrinho(req,res){
 }
 
 export async function sendOrder(req, res){
-    const {value,} = req.body;
+    const {value, method} = req.body;
     const { tokenOk } = res.locals;
     const dataAtual = dayjs();
 
@@ -138,6 +138,7 @@ export async function sendOrder(req, res){
         const order = {
             idUser: user._id,
             value: value,
+            method: method,
             products: user.carrinho,
             time: dataAtual.format('DD-MM-YYYY')
         }
