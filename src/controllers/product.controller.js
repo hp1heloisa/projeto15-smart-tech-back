@@ -89,8 +89,25 @@ export async function searchProduct(req, res) {
 export async function getCarrinho(req, res){
     const { tokenOk } = res.locals;
     try {
+        const carrinho = [];
         const user = await db.collection('user').findOne({_id: new ObjectId(tokenOk.idUser)});
-        res.send(user.carrinho);
+        user.carrinho.forEach(produto => {
+            let tem = false;
+            let index = 0;
+            for (let i = 0; i<carrinho.length; i++){
+                if (carrinho[i][0].name == produto.name){
+                    tem = true;
+                    index = i;
+                    break
+                }
+            }
+            if (tem){
+                carrinho[index][1]++;
+            } else{
+                carrinho.push([produto,1]);
+            }
+        })
+        res.send(carrinho);
     } catch (error) {
         res.status(500).send(error.message);
     }
