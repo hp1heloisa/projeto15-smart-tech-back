@@ -76,7 +76,9 @@ export async function addCarrinho(req, res) {
 export async function searchProduct(req, res) {
     const {world} = req.query;
     try {
-        const list = await db.collection('products').find({name: {$regex: world, $options: 'i'}}).toArray();
+        const listName = await db.collection('products').find({name: {$regex: world, $options: 'i'}}).toArray();
+        const listCategory = await db.collection('products').find({category: {$regex: world, $options: 'i'}}).toArray();
+        const list = [...listName, ...listCategory];
         res.send(list);
     } catch (error) {
         res.status(500).send(error.message);
